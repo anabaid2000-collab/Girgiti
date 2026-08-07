@@ -1,19 +1,51 @@
-Ristorante Rossini - Category/Admin Fix
+# Ristorante Rossini
 
-Upload this whole folder to Netlify (or drag the ZIP contents into Netlify).
+GitHub Pages-ready restaurant menu with a Firebase-powered admin panel.
 
-Admin URL:
-https://YOUR-SITE.netlify.app/admin/
+## GitHub Pages
 
-IMPORTANT:
-- The admin manager is hidden until Firebase Authentication login succeeds.
-- This version forces a fresh Firebase login whenever /admin/ is opened.
-- After login you can add/delete categories and add/edit/delete food items.
-- Existing categories: Pasta, Pizza, Dolci.
-- New categories are stored in Firestore collection: categories.
-- Menu items are stored in Firestore collection: menu.
-- Image field currently uses an image URL. Firebase Storage uploads require Storage to be enabled on the project.
+In your GitHub repository:
 
+1. Open **Settings → Pages**.
+2. Under **Build and deployment**, choose **Deploy from a branch**.
+3. Select branch **main** and folder **/(root)**.
+4. Save and wait for the deployment to finish.
 
-IMPORTANT FIX v2:
-Categories are now stored as special documents inside the existing 'menu' collection, so no separate Firestore 'categories' collection/rules are required. This fixes the 'Loading categories...' issue when only menu collection permissions are configured. New custom categories also appear on the public menu automatically.
+For a repository named `REPOSITORY`, the public URL is:
+
+`https://USERNAME.github.io/REPOSITORY/`
+
+Admin panel:
+
+`https://USERNAME.github.io/REPOSITORY/admin/`
+
+The navigation links in this version use relative paths, so they work correctly on GitHub Pages project sites.
+
+## Firebase Authentication
+
+The admin panel uses Firebase Authentication. In Firebase Console:
+
+**Authentication → Settings → Authorized domains**
+
+Add your GitHub Pages host, for example:
+
+`USERNAME.github.io`
+
+Make sure the admin email/password account exists under **Authentication → Users**.
+
+If login shows `auth/unauthorized-domain`, the GitHub Pages domain has not been added to Firebase's Authorized domains.
+
+## Firestore
+
+The menu is stored in the `menu` collection. Category documents have:
+
+- `type: "category"`
+- `name: "Category Name"`
+
+Menu items are normal documents in the same collection.
+
+The supplied `firestore.rules` allows public reads and authenticated writes. For a real production site, restrict writes to the specific admin account rather than every authenticated Firebase user.
+
+## Important
+
+Do not publish Firebase service-account/private keys in this repository. The Firebase web configuration in the HTML is normally a client-side configuration, but Firestore Security Rules and Authentication must still be configured correctly.
